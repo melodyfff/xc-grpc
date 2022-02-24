@@ -2,7 +2,7 @@ syntax = "proto3";
 
 
 option java_multiple_files = true;
-option java_package = "java.simple.helloworld";
+option java_package = "com.xinchen.grpc.simple";
 option java_outer_classname = "HelloWorldProto";
 
 

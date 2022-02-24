@@ -1,4 +1,4 @@
-package com.xinchen.grpc.simple;
+package com.xinchen.grpc.simple.server;
 
 import io.grpc.BindableService;
 import io.grpc.ServerServiceDefinition;
@@ -8,9 +8,9 @@ import io.grpc.ServerServiceDefinition;
  */
 public class DefaultGrpcServer extends AbstractGrpcServer {
 
-  DefaultGrpcServer(){}
+  public DefaultGrpcServer(){}
 
-  DefaultGrpcServer(int port) {
+  public DefaultGrpcServer(int port) {
     super(port);
   }
 

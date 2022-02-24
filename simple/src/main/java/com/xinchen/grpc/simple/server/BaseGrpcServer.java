@@ -1,4 +1,4 @@
-package com.xinchen.grpc.simple;
+package com.xinchen.grpc.simple.server;
 
 import io.grpc.BindableService;
 import io.grpc.ServerServiceDefinition;

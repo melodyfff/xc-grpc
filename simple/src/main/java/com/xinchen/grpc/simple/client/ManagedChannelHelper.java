@@ -2,20 +2,28 @@ package com.xinchen.grpc.simple.client;
 
 import io.grpc.ManagedChannel;
 import io.grpc.ManagedChannelBuilder;
-import io.grpc.stub.AbstractBlockingStub;
-import io.grpc.stub.AbstractStub;
+import java.util.Map;
 
 /**
- * @date 2022-02-24 15:05
+ * 帮助获取{@link ManagedChannel}
+ *
+ * @since 2022-02-24 15:05
  */
-public class ServiceCallerClient <T>{
+public final class ManagedChannelHelper{
 
-  private final ManagedChannel channel;
-  AbstractStub blockingStub;
+  ManagedChannelHelper(){}
 
-  ServiceCallerClient(String host,int port){
-    channel = ManagedChannelBuilder.forAddress(host, port)
+  public static ManagedChannel resolveFrom(String host,int port){
+    return ManagedChannelBuilder.forAddress(host, port)
         .usePlaintext()
+        .build();
+  }
+
+  public static ManagedChannel resolveFrom(String host,int port, Map<String, ?> serviceConfig ){
+    System.out.println(String.format("Load Service Config: %s",serviceConfig));
+    return ManagedChannelBuilder.forAddress(host, port)
+        .usePlaintext()
+        .defaultServiceConfig(serviceConfig)
         .build();
   }
 }
