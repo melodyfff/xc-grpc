@@ -6,6 +6,8 @@ option java_package = "com.xinchen.grpc.simple";
 option java_outer_classname = "HelloWorldProto";
 
 
+package helloworld;
+
 // The request message containing the user's name.
 message HelloRequest {
     string name = 1;

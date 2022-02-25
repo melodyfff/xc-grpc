@@ -1,15 +1,8 @@
 package com.xinchen.grpc.simple;
 
-import static java.nio.charset.StandardCharsets.UTF_8;
-
-import com.google.gson.Gson;
-import com.google.gson.stream.JsonReader;
 import com.xinchen.grpc.simple.client.ManagedChannelHelper;
 import io.grpc.ManagedChannel;
 import io.grpc.StatusRuntimeException;
-import java.io.InputStreamReader;
-import java.util.Map;
-import java.util.Objects;
 import java.util.concurrent.ForkJoinPool;
 import java.util.concurrent.TimeUnit;
 import java.util.concurrent.atomic.AtomicInteger;
@@ -17,23 +10,16 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 
 /**
+ *
+ * 加载配置retrying_service_config.json，控制重试
+ *
  * @date 2022-02-24 15:28
  */
 class RetryingHelloWorldClient {
   private static final Logger logger = Logger.getLogger(RetryingHelloWorldClient.class.getName());
-  private final ManagedChannel channel = ManagedChannelHelper.resolveFrom("localhost",50051,getRetryingServiceConfig());
+  private final ManagedChannel channel = ManagedChannelHelper.resolveFrom("localhost",50051,"retrying_service_config.json");
   private final GreeterGrpc.GreeterBlockingStub blockingStub = GreeterGrpc.newBlockingStub(channel);
 
-  static Map<String, ?> getRetryingServiceConfig() {
-    return new Gson()
-        .fromJson(
-            new JsonReader(
-                new InputStreamReader(
-                    Objects.requireNonNull(RetryingHelloWorldClient.class.getClassLoader().getResourceAsStream(
-                        "retrying_service_config.json")),
-                    UTF_8)),
-            Map.class);
-  }
 
 
   private final AtomicInteger totalRpcs = new AtomicInteger();
@@ -63,11 +49,7 @@ class RetryingHelloWorldClient {
 
 
   private void printSummary() {
-    logger.log(
-        Level.INFO,
-        "\n\nTotal RPCs sent: {0}. Total RPCs failed: {1}\n",
-        new Object[]{
-            totalRpcs.get(), failedRpcs.get()});
+    logger.log(Level.INFO, "\n\nTotal RPCs sent: {0}. Total RPCs failed: {1}\n", new Object[]{totalRpcs.get(), failedRpcs.get()});
   }
 
   ManagedChannel getChannel() {
@@ -90,6 +72,7 @@ class RetryingHelloWorldClient {
     }
     executor.awaitQuiescence(100, TimeUnit.SECONDS);
     executor.shutdown();
+
     client.printSummary();
     client.getChannel().shutdown().awaitTermination(60, TimeUnit.SECONDS);
   }
